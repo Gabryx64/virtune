@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Greet from './lib/Greet.svelte'
+  import Player from "./lib/Player.svelte";
 </script>
 
 <main class="container">
@@ -17,15 +17,11 @@
     </a>
   </div>
 
-  <p>
-    Click on the Tauri, Vite, and Svelte logos to learn more.
-  </p>
+  <p>Click on the Tauri, Vite, and Svelte logos to learn more.</p>
 
   <div class="row">
-    <Greet />
+    <Player />
   </div>
-
-
 </main>
 
 <style>
@@ -37,3 +33,4 @@
     filter: drop-shadow(0 0 2em #ff3e00);
   }
 </style>
+

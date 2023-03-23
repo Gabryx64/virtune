@@ -1,15 +1,31 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
+mod player;
+use player::{next, play, prev, Player, PlayerState};
 
-fn main() {
+use color_eyre::Result;
+use std::sync::RwLock;
+use tracing::Level;
+use tracing_subscriber::FmtSubscriber;
+
+fn main() -> Result<()> {
+    color_eyre::install()?;
+
+    let subscriber = FmtSubscriber::builder()
+        .with_max_level(Level::TRACE)
+        .without_time()
+        .with_file(false)
+        .with_target(false)
+        .with_line_number(false)
+        .finish();
+
+    tracing::subscriber::set_global_default(subscriber)?;
+
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .manage(PlayerState(RwLock::new(Player::new()?)))
+        .invoke_handler(tauri::generate_handler![next, play, prev])
+        .run(tauri::generate_context!())?;
+
+    Ok(())
 }
